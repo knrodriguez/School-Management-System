@@ -1,7 +1,5 @@
 package jpa.entitymodels;
 
-import jpa.entitymodels.Course;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +7,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -28,8 +27,8 @@ public class Student {
 	@Column(name = "password", nullable = false, length = 50)
 	private String sPass;
 
-	@OneToMany
-	private List<Course> sCourses;
+	@OneToMany(targetEntity = Course.class)
+	private List sCourses;
 
 	public Student() {
 		sEmail = "";
@@ -38,7 +37,7 @@ public class Student {
 		sCourses = new ArrayList<>();
 	}
 	
-	public Student(String email, String name, String pass, List<Course> courses) {
+	public Student(String email, String name, String pass, List courses) {
 		this.sEmail = email;
 		this.sName = name;
 		this.sPass = pass;

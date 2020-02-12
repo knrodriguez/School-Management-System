@@ -68,4 +68,18 @@ public class Course {
 				+ this.cInstructorName + "\n"); 
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Course) {
+			Course other = (Course) obj;
+			boolean sameId = (this.cId == other.getcId());
+			boolean sameName = (this.getcName().equals(other.getcName()));
+			boolean sameInstructor = (this.getcInstructorName().equals(other.getcInstructorName()));
+			if(sameId && sameName && sameInstructor) return true;
+			else return false;
+		}
+		else return false;
+	}
+	
+	
 }

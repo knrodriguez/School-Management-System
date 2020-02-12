@@ -1,0 +1,34 @@
+School Management System 
+AD - SBA - Core Java/JPA/JUnit 
+Author: Kirstie Rodriguez
+Date: 2/12/2020 
+
+This zip file contains all classes related to the School Management System,
+excluding the two SQL files to populate the tables. 
+
+NOTE: This project is originally a JPA project converted to Maven and using the 
+MariaDB and JavaX Persistence API dependencies. The JUnit library was added to the 
+build path as well. 
+
+----------------------------All Classes Included--------------------------------------
+1.jpa.dao - contains the interface for each service class. Lists all methods each 
+			service class will implement. No logic or constants provided.
+	-CourseDAO
+	-StudentDAO
+	
+2.jpa.entitymodels - uses JPA to create the tables in the SMS database.
+	-Course
+	-Student
+	
+3.jpa.mainrunner - custom main runner to execute business requirements.
+	-SMSRunner
+
+4.jpa.service - contains logic and business requirements for all methods in the DAOs. 
+			    Connects to the database. 
+	-CourseService
+	-StudentService
+
+5.jpa.tests - tests the CourseService method getAllCourses()
+	-CourseServiceTest	
+---------------------------------------------------------------------------------------
+

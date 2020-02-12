@@ -1,9 +1,11 @@
 package jpa.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
@@ -35,7 +37,8 @@ public class StudentService implements StudentDAO{
 		em.getTransaction().begin();
 		Query query = em.createQuery("SELECT s FROM Student s WHERE s.sEmail = :sEmail");
 		query.setParameter("sEmail", sEmail);
-		Student student = (Student) query.getSingleResult();
+		Student student = null;
+		student = (Student) query.getSingleResult();
 		em.getTransaction().commit();
 		em.close();
 		emf.close();
@@ -49,7 +52,10 @@ public class StudentService implements StudentDAO{
 		em.getTransaction().begin();
 		Query query = em.createQuery("SELECT s FROM Student s WHERE s.sEmail = :sEmail AND s.sPass = :sPassword");
 		query.setParameter("sEmail", sEmail).setParameter("sPassword", sPassword);
-		Student student = (Student) query.getSingleResult();
+		Student student = null;
+		try{
+			student = (Student) query.getSingleResult();
+		} catch(NoResultException e) {}
 		em.getTransaction().commit();
 		em.close();
 		emf.close();
@@ -62,25 +68,24 @@ public class StudentService implements StudentDAO{
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("SMS");
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		
-/*		Query query = em.createQuery("SELECT s.sCourses_id FROM Student_Course s "
-				+ "WHERE s.Student_email = :sEmail");
-		query.setParameter("sEmail", sEmail);
-		List<Course> sCourses = query.getResultList();*/
-		
 		Student student = studentService.getStudentByEmail(sEmail);
 		List<Course> sCourses = student.getsCourses();		
 		for(Course c: sCourses) {
-			if(c.getcId() == cId)
+			if(c.getcId() == cId) {
 				System.out.println("Student is already registered to course " + cId);
-			return;
+				return;
+			}
 		}		
 		Course newCourse = em.find(Course.class, cId);
 		sCourses.add(newCourse);	
 		student.setsCourses(sCourses);
-		Query query = em.createQuery();
-		em.persist(student);
-		em.getTransaction().commit();	
+		Query query = em.createQuery("DELETE FROM Student s WHERE s.sEmail = :sEmail");
+		query.setParameter("sEmail", sEmail);
+		int numDeleted = query.executeUpdate();
+		if(numDeleted == 1) {
+			em.persist(student);
+			em.getTransaction().commit();
+		}
 		em.close();
 		emf.close();
 	}
